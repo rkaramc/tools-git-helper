@@ -2,7 +2,7 @@
 
 ## Workflow Steps:
 1. USER requests Cascade to handle the commit process.
-2. Cascade runs `.git/git-workflow.bat` to generate the base `pending-changes.md` file.
+2. Cascade runs `uv run .git/git-workflow.py` to generate the base `pending-changes.md` file.
 3. Cascade reviews `pending-changes.md`, git status, and git diff to create the commit message and file change descriptions.
 4. Cascade edits `pending-changes.md` to insert the generated details.
 5. Cascade prompts the USER to review the commit message and asks for permission to commit.

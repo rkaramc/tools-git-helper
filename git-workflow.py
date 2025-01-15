@@ -32,7 +32,28 @@ def run_git_command(args: List[str], cwd: str) -> Tuple[str, str, int]:
 def get_file_changes(repo_path: str) -> List[FileChange]:
     """Get list of changed files with detailed statistics."""
     changes = []
-    
+    stats_dict = {}
+
+    # Get diff stats for all modified, unstaged files at once
+    diff_stats, _, _ = run_git_command(["diff", "--numstat"], repo_path)
+    for line in diff_stats.split('\n'):
+        if line:
+            added, removed, file = line.split('\t')
+            stats_dict[file] = (int(added), int(removed))
+
+    # Get diff stats for all modified, staged files at once
+    diff_stats, _, _ = run_git_command(["diff", "--numstat", "--cached"], repo_path)
+    for line in diff_stats.split('\n'):
+        if line:
+            added, removed, file = line.split('\t')
+            if file in stats_dict:
+                stats_dict[file] = (
+                    stats_dict[file][0] + int(added),
+                    stats_dict[file][1] + int(removed)
+                )
+            else:
+                stats_dict[file] = (int(added), int(removed))
+
     # Get status of files
     stdout, stderr, return_code = run_git_command(["status", "--porcelain"], repo_path)
     if return_code != 0:
@@ -50,34 +71,21 @@ def get_file_changes(repo_path: str) -> List[FileChange]:
         if file.startswith('.git/') or file == 'pending-changes.md':
             continue
 
+        # Get diff statistics from the pre-computed stats
+        if file in stats_dict:
+            added, removed = stats_dict[file]
+        else:
+            added, removed = 0, 0
+
+        # Calculate percentage changed
+        total_lines = added + removed
+        percent_changed = (total_lines / max(1, total_lines)) * 100
+    
         # Get diff statistics
-        if 'D' not in status:  # Skip deleted files
-            # Get stats for unstaged changes
-            unstaged_stats, _, _ = run_git_command(
-                ["diff", "--numstat", file],
-                repo_path
-            )
-            # Get stats for staged changes
-            staged_stats, _, _ = run_git_command(
-                ["diff", "--numstat", "--cached", "--", file],
-                repo_path
-            )
-            
-            # Combine stats from both staged and unstaged changes
-            total_added = 0
-            total_removed = 0
-            
-            for stats in [unstaged_stats, staged_stats]:
-                if stats:
-                    added, removed, _ = stats.split('\t')
-                    try:
-                        total_added += int(added)
-                        total_removed += int(removed)
-                    except ValueError:
-                        print(f"Warning: Could not parse diff stats for {file}")
-                        continue
-            
-            if total_added > 0 or total_removed > 0:
+        if 'D' in status:  # For deleted files, count all lines as removed
+            changes.append(FileChange(file, status, 0, removed, 100.0, "File deleted"))
+        else:
+            if added > 0 or removed > 0:
                 # Get total lines in the file for percentage calculation
                 # Check both status characters - first char is staging status, second is working tree status
                 is_new_file = 'A' in status  # File is new if either staged or unstaged status is 'A'
@@ -87,15 +95,15 @@ def get_file_changes(repo_path: str) -> List[FileChange]:
                         repo_path
                     )
                     total_lines = len(file_content.split('\n')) if file_content else 0
-                    percent = round((total_added + total_removed) / total_lines * 100, 2) if total_lines > 0 else 100
+                    percent = round((added + removed) / total_lines * 100, 2) if total_lines > 0 else 100
                 else:
                     percent = 100  # New file
                 
                 changes.append(FileChange(
                     file=file,
                     status=status,
-                    added_lines=total_added,
-                    removed_lines=total_removed,
+                    added_lines=added,
+                    removed_lines=removed,
                     percent_changed=percent
                 ))
 
@@ -200,6 +208,10 @@ Please review the changes and stage the files you want to include in the commit.
 if __name__ == "__main__":
     print("git-workflow.py")
     print("version: 1.0.0")
-    repo_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    script_path = os.path.abspath(__file__)
+    if '.git' in script_path.split(os.path.sep):
+        repo_path = os.path.dirname(os.path.dirname(script_path))
+    else:
+        repo_path = os.path.dirname(script_path)
     update_pending_changes(repo_path)
     print(f"\nUpdated {os.path.join(repo_path, 'pending-changes.md')} with current changes.")
