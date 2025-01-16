@@ -43,7 +43,7 @@ def format_markdown_table(changes: List[FileChange]) -> str:
     rows = [
         [
             change.file,
-            change.status,
+            change.status2 + '/' + change.status,
             str(change.added_lines),
             str(change.removed_lines),
             f"{change.percent_changed:.1f}%",

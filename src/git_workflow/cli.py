@@ -51,7 +51,7 @@ def review():
 
 def _review():
     repo_path = get_repo_root()
-    changes = get_file_changes(repo_path)
+    changes = get_file_changes(repo_path, cached_only=True)
 
     if not changes:
         console.print("[yellow]No changes detected[/yellow]")

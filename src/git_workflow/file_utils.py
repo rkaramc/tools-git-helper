@@ -4,9 +4,9 @@ import datetime
 import os
 from typing import List
 
-from .formatters import format_markdown_table
-from .git_utils import get_diff_output, get_file_changes
-from .models import FileChange
+from git_workflow.formatters import format_markdown_table
+from git_workflow.git_utils import get_diff_output, get_file_changes
+from git_workflow.models import FileChange
 
 
 def update_pending_changes(repo_path: str, changes: List[FileChange]) -> None:
@@ -15,9 +15,9 @@ def update_pending_changes(repo_path: str, changes: List[FileChange]) -> None:
 
     current_time = datetime.datetime.now().strftime("%Y-%m-%d")
 
+    diff_output = ""
     if len(changes):
         # Get git diff for all changed files
-        diff_output = ""
         for change in changes:
             result = get_diff_output(repo_path, change.file)
             if result.returncode == 0 and result.stdout:
@@ -35,11 +35,13 @@ type: concise description of changes
 - Impact of changes
 ]
 
+!!!WARNING!!! Please update the commit message before committing!
+
 ## Modified Files
 
 {format_markdown_table(changes)}
 
-Please review the changes and stage the files you want to include in the commit. Once approved, the commit will be made and this file will be cleared.
+Please review the changes and stage the files you wish to include in the commit. Once approved, the staged files will be committed. This file can then be deleted.
 
 ## Detailed Changes
 {diff_output}

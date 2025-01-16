@@ -14,19 +14,22 @@ After reviewing our interactions, here are several potential improvements to the
     - [x] Add line count changes automatically (added/removed lines)
     - [x] Calculate percentage of file changed
     - [x] Optimize performance by batching git diff operations
-    - [ ] Highlight staged/unstaged file changes
-    - [ ] Add support for binary file changes
+    - [x] Highlight staged/unstaged file changes
     - [ ] Improve handling of renamed files
+    - [ ] Improve handling of moved files
+    - [ ] Add support for binary file changes
     - [ ] Add detection for file mode changes
-    - [ ] Track file history for moved files
+    - [ ] Support incremental file change detection
+    - [ ] Support file change detection running in the background
 2. Table Formatting
     - [x] Enforce consistent column widths from the start
     - [x] Add automatic table formatting when updating pending-changes.md
     - [x] Use structured template with pre-aligned columns
-    - [ ] Add indicator for staged/unstaged changed files
+    - [x] Add indicator for staged/unstaged changed files
     - [ ] Support for collapsible sections in large commits
     - [ ] Add file grouping by change type
     - [ ] Support for custom column configurations
+    - [ ] Support incremental table updates
 3. Commit Message Structure
     - [x] Support conventional commit types
     - [x] Basic commit message validation
@@ -35,6 +38,7 @@ After reviewing our interactions, here are several potential improvements to the
     - [ ] Add optional footer for breaking changes
     - [ ] Implement commit message templates based on change types
     - [ ] Support for multi-line commit messages with proper formatting
+    - [ ] Support iterative commit message updates
 4. Change Grouping
     - [x] Basic change detection and grouping
     - [ ] Define pre-set scopes based on project components/modules
@@ -62,6 +66,7 @@ After reviewing our interactions, here are several potential improvements to the
     - [ ] Rich terminal UI with navigation
     - [ ] Add support for shell completion in bash/zsh/pwsh/fish
     - [ ] Improve documentation with more usage examples
+    - [ ] Allow user to run `gw-commit prepare` multiple times, without losing changes
 7. Error Handling
     - [x] Basic error reporting
     - [ ] Add detailed error messages for common git operations
