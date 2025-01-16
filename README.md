@@ -10,12 +10,9 @@ This tool will help you manage your commits better by providing a structured app
 1. Helps you review changes before committing.
 2. Helps you create clear commit messages, optionally powered by AI.
 3. Validate your commit messages to ensure they follow the Conventional Commits specification.
-3. Validate your commit messages to ensure they follow the Conventional Commits specification.
 
 We've included example rules for AI helpers. These show how to use this tool with AI to make better commit messages.
-We've included example rules for AI helpers. These show how to use this tool with AI to make better commit messages.
 
-One of the most popular commit message conventions is [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0-beta.2/). Eventually, this tool will validate your commit messages to ensure they follow the Conventional Commits specification.
 One of the most popular commit message conventions is [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0-beta.2/). Eventually, this tool will validate your commit messages to ensure they follow the Conventional Commits specification.
 
 ## Prerequisites
