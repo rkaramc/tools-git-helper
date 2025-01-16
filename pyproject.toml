@@ -21,10 +21,6 @@ dev = [
 
 [project.scripts]
 gw-commit = "git_workflow.main:cli"
-gw-commit-prepare = "git_workflow.main:prepare"
-gw-commit-message = "git_workflow.main:message"
-gw-commit-review = "git_workflow.main:review"
-gw-commit-commit = "git_workflow.main:commit"
 
 [project.urls]
 Homepage = "https://github.com/rkaramc/git-workflow-tool"
