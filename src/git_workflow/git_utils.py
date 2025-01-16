@@ -95,6 +95,7 @@ def get_file_changes(repo_path: str) -> List[FileChange]:
         if "D" in status:  # For deleted files, count all lines as removed
             changes.append(FileChange(file, status, 0, removed, 100.0, "File deleted"))
         else:
+            percent = 100
             if added > 0 or removed > 0:
                 # Get total lines in the file for percentage calculation
                 # Check both status characters - first char is staging status, second is working tree status
@@ -111,8 +112,6 @@ def get_file_changes(repo_path: str) -> List[FileChange]:
                         if total_lines > 0
                         else 100
                     )
-                else:
-                    percent = 100  # New file
 
             changes.append(
                 FileChange(

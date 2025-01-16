@@ -44,13 +44,13 @@
     - Impact of changes]
    ```
 
-## Git Commit Workflow
-### Workflow Steps:
-1. USER requests Cascade to update the pending-changes.md file.
-2. Cascade runs `uv run .git  /git-workflow.py` to generate the base `pending-changes.md` file.
-3. Cascade reviews `pending-changes.md` to create the commit message and file change descriptions.
-4. Cascade edits `pending-changes.md` to insert the generated message and descriptions.
-5. Cascade prompts the USER to review the commit message and asks for permission to commit.
-6. USER reviews the changes
-7. USER requests Cascade to commit
-8. Cascade commits the changes and removes `pending-changes.md`.
+# Git Commit Workflow Rules for AI Copilots/Assistants
+
+## Workflow Steps:
+1. USER requests Cascade to generate the commit message.
+2. Cascade reviews `pending-changes.md` and updates the commit message and file change descriptions.
+    - The `pending-changes.md` file includes a draft commit message, a list of changed files, and the changes in each file in `diff` format.
+    - Cascade will generate a concise commit message for the full commit.
+    - Cascade will generate a concise change description for each file, based on the changes detected.
+    - Cascade will update the `pending-changes.md` file with the generated commit message and change descriptions.
+3. Cascade prompts the USER to review the commit message, and to commit using `gw-commit commit`.
