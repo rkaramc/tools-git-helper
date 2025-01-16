@@ -130,3 +130,12 @@ def get_diff_output(repo_path: str, file: str) -> str:
     diff_cmd = ["git", "diff", "--no-color", "HEAD", file]
     result = subprocess.run(diff_cmd, capture_output=True, text=True)
     return result
+
+def validate_commit_message(commit_message: str) -> bool:
+    # Add your validation logic here
+    # Return True if the commit message is valid, False otherwise
+    # Will eventually check for Conventional Commits compliance
+    if commit_message.startswith("type: concise description of changes"):
+        console.print("[red]Error:[/red] Commit message has not been updated to Conventional Commits format")
+        return False
+    return True

@@ -14,7 +14,7 @@ from git_workflow.file_utils import (
     update_pending_changes,
 )
 from git_workflow.formatters import format_rich_table
-from git_workflow.git_utils import get_file_changes, get_repo_root
+from git_workflow.git_utils import get_file_changes, get_repo_root, validate_commit_message
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
@@ -131,6 +131,11 @@ def _commit(message: str, amend: bool):
 
     if not message:
         console.print("[red]Error:[/red] No commit message provided")
+        raise click.Abort()
+
+    valid_message = validate_commit_message(message)
+    if not valid_message:
+        console.print("[red]Error:[/red] Commit message is not valid")
         raise click.Abort()
 
     console.print(f"[green]Commit message:[/green] {message}")

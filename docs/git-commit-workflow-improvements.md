@@ -3,6 +3,7 @@ After reviewing our interactions, here are several potential improvements to the
 
 0. Capabilities
     - [x] Commit message generation, review and commit
+    - [ ] Robust commit message validation as per [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0-beta.2/)
     - [ ] Commit history analysis
     - [ ] Custom workflows through plugins
     - [ ] Support for Team Collaboration
@@ -29,7 +30,7 @@ After reviewing our interactions, here are several potential improvements to the
 3. Commit Message Structure
     - [x] Support conventional commit types
     - [x] Basic commit message validation
-    - [ ] Add validation for commit message format
+    - [ ] Add validation for commit message format as per [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0-beta.2/)
     - [ ] Validate scope in commit messages (e.g., type(scope): message)
     - [ ] Add optional footer for breaking changes
     - [ ] Implement commit message templates based on change types

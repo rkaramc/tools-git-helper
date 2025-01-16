@@ -1,6 +1,16 @@
 # Git Workflow Tool
 
-A tool for managing git commits with structured workflows.
+Welcome to the Git Workflow Tool! This tool helps you manage your git commits better by providing a structured approach to reviewing changes and drafting commit messages. 
+
+Do you find yourself struggling to come up with a clear commit message for your changes? Do you need a better way to review changes before committing? Have you made so many changes at once that you can't keep track of them all?
+
+This tool will help you manage your commits better by providing a structured approach to reviewing changes and drafting commit messages. It currently has the following features: 
+1. Helps you review changes before committing.
+2. Helps you create clear commit messages, optionally powered by AI.
+
+We've also added example rules for AI helpers. These show how to use this tool with AI to make better commit messages.
+
+One of the most popular commit message conventions is [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0-beta.2/).
 
 ## Prerequisites
 
@@ -18,45 +28,39 @@ A tool for managing git commits with structured workflows.
 2. Add the workflow rules `ai-rules.md` (or variant) to your AI copilot. 
    - The `git-commit-workflow` section contains the rules for generating commit messages.
 
-3. Add `pending-changes.md` to your `.git/info/exclude` file.
-   - This file is used as a scratchpad for tracking changes during git commit workflow operations.
-   - Adding this file to `.git/info/exclude` will prevent it from being committed to the repository.
+Remember to add [pending-changes.md] to your `.git/info/exclude` file to prevent it from being tracked in the repository, as it is used as a temporary scratchpad during the commit workflow.
    - NOTE: Adding this file to `.gitignore` may prevent your AI copilot from accessing it. (e.g. Windsurf)
 
 ## Usage
 
+You can use the tool by running the following commands.
+
 ```bash
 # Generate pending changes file
-gw-commit prepare
+gw-commit prepare    # Scans for changes and prepares a list of changes for review
 
-# Use your copilot AI to generate commit message
-#    (See ai-rules.md and docs/git-commit-workflow-rules.md for details)
-gw-commit message
+# Set a manual commit message
+gw-commit message --message "fix: some changes"    # Set a draft commit message provided by the user
+                                                   # OR edit the file pending-changes.md in an editor
+                                                   # OR request your AI copilot to generate a draft commit message 
+                                                   #    and update the file pending-changes.md directly
 
 # Review and edit pending-changes.md
-gw-commit review
+gw-commit review     # Shows the pending changes and draft commit message for review
 
 # Commit changes
-gw-commit commit
+gw-commit commit     # Commits the changes to the repository, with the commit message provided by the user
 ```
 
 ## Features
 - Core git workflow automation functionality
-    - Command-line interface with key commands:
-    - `gw-commit` with sub-commands:
-        - `prepare`: Generate pending changes file
-        - `message`: Use Cascade AI to generate commit message, or set manually
-        - `review`: Review pending changes and commit message
-        - `commit`: Commit changes (optionally with `--amend` to amend previous commit; with '--message' for manual commit message)
+- Command-line interface with key commands:
+  - `gw-commit` with sub-commands:
+    - `prepare`: Generate pending changes file
+    - `message`: Set commit message manually or use an AI copilot to generate it
+    - `review`: Review pending changes and commit message
+    - `commit`: Commit changes (optionally with `--amend` to amend previous commit; with '--message' for manual commit message)
 
-
-## Development
-
-1. Clone the repository
-2. Install development dependencies:
-   ```bash
-   uv pip install -e ".[dev]"
-   ```
 
 ### Technical Implementation
 - Using `click` for CLI interface
@@ -64,12 +68,6 @@ gw-commit commit
 - Git operations through `gitpython` and subprocess
 - `uv` package manager for dependency management
 - Organized project structure with src layout
-
-## Contributing
-
-1. Fork the repository
-2. Create your feature branch
-3. Submit a pull request
 
 ## License
 
