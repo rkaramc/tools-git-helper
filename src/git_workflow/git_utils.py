@@ -128,6 +128,6 @@ def get_file_changes(repo_path: str) -> List[FileChange]:
 
 def get_diff_output(repo_path: str, file: str) -> str:
     """Get git diff for changed file."""
-    diff_cmd = ["git", "diff", "--no-color", file]
+    diff_cmd = ["git", "diff", "--no-color", "HEAD", file]
     result = subprocess.run(diff_cmd, capture_output=True, text=True)
     return result
