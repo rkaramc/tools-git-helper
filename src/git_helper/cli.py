@@ -5,16 +5,24 @@ import os
 
 import click
 import git
+from rich import print as rprint
 from rich.console import Console
 from rich.markdown import Markdown
+from rich.panel import Panel
 
-from git_workflow.file_utils import (
+from .commit_validator import (
+    format_validation_error,
+    validate_commit_message,
+)
+from .file_utils import (
     get_commit_message_from_pending_file,
+    # read_pending_changes,
     set_commit_message_to_pending_file,
     update_pending_changes,
+    # write_pending_changes,
 )
-from git_workflow.formatters import format_rich_table
-from git_workflow.git_utils import get_file_changes, get_repo_root, validate_commit_message
+from .formatters import format_rich_table
+from .git_utils import get_file_changes, get_repo_root
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
@@ -35,6 +43,7 @@ def prepare():
     logger.debug("git workflow tool -> cli -> prepare")
     _prepare()
 
+
 def _prepare():
     repo_path = get_repo_root()
     changes = get_file_changes(repo_path)
@@ -43,11 +52,13 @@ def _prepare():
         f"\n[green]Updated[/green] {os.path.join(repo_path, 'pending-changes.md')} with current changes."
     )
 
+
 @cli.command()
 def review():
     """Review pending changes in a formatted view."""
     logger.debug("git workflow tool -> cli -> review")
     _review()
+
 
 def _review():
     repo_path = get_repo_root()
@@ -59,15 +70,19 @@ def _review():
 
     pending_file = os.path.join(repo_path, "pending-changes.md")
     if not os.path.exists(pending_file):
-        prepare()
+        _prepare()
 
     if os.path.exists(pending_file):
-        with open(pending_file, "r", encoding="utf-8") as f:
-            content = f.read()
-            start = content.find("## Draft Commit Message")
-            end = content.find("## Modified Files")
-            md = Markdown(content[start:end])
-            console.print(md)
+        message = get_commit_message_from_pending_file(pending_file)
+        is_valid, error_message = validate_commit_message(message)
+        if not is_valid:
+            console.print(f"[red]Error:[/red] {error_message}")
+            console.print(format_validation_error(error_message))
+            raise click.Abort()
+        else:
+            console.print(f"[green]Valid commit message:[/green]")
+        md = Markdown(message)
+        console.print(md)
     table = format_rich_table(changes)
     console.print(table)
 
@@ -78,6 +93,7 @@ def message(message: str):
     """Use Cascade AI to generate commit message."""
     logger.debug("git workflow tool -> cli -> message")
     _message(message)
+
 
 def _message(message: str):
     logger.debug("generate commit message")
@@ -95,15 +111,22 @@ def _message(message: str):
         console.print(
             "Please use the Cascade AI assistant to generate your commit message"
         )
-        raise click.Abort()
-
-    console.print(f"[green]New commit message:[/green] {message}")
+        return
+    else:
+        console.print(f"[green]New commit message:[/green] {message}")
 
     pending_file = os.path.join(repo_path, "pending-changes.md")
     if not os.path.exists(pending_file):
-        prepare()
+        _prepare()
 
     if os.path.exists(pending_file):
+        message = message or get_commit_message_from_pending_file(pending_file)
+        is_valid, error_message = validate_commit_message(message)
+        if not is_valid:
+            console.print(f"[red]Error:[/red] {error_message}")
+            console.print(format_validation_error(error_message))
+            raise click.Abort()
+
         set_commit_message_to_pending_file(pending_file, message)
         console.print(f"[green]Updated[/green] {pending_file} with commit message")
 
@@ -117,6 +140,7 @@ def commit(message: str, amend: bool):
     """Commit changes with the specified message."""
     logger.debug("git workflow tool -> cli -> commit")
     _commit(message, amend)
+
 
 def _commit(message: str, amend: bool):
     repo_path = get_repo_root()

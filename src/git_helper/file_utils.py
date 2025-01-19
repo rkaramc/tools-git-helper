@@ -4,9 +4,11 @@ import datetime
 import os
 from typing import List
 
-from git_workflow.formatters import format_markdown_table
-from git_workflow.git_utils import get_diff_output, get_file_changes
-from git_workflow.models import FileChange
+from git.cmd import Git
+
+from .formatters import format_markdown_table
+from .git_utils import get_file_changes
+from .models import FileChange
 
 
 def update_pending_changes(repo_path: str, changes: List[FileChange]) -> None:
@@ -19,9 +21,9 @@ def update_pending_changes(repo_path: str, changes: List[FileChange]) -> None:
     if len(changes):
         # Get git diff for all changed files
         for change in changes:
-            result = get_diff_output(repo_path, change.file)
-            if result.returncode == 0 and result.stdout:
-                diff_output += f"\n### {change.file}\n```diff\n{result.stdout}```\n"
+            if os.path.exists(change.file):
+                result = Git(repo_path).diff("--no-color", "HEAD", change.file)
+                diff_output += f"\n---\n\n### {change.file}\n```diff\n{result}\n```\n"
 
     content = f"""# Pending Changes ({current_time})
 
@@ -35,13 +37,13 @@ type: concise description of changes
 - Impact of changes
 ]
 
-!!!WARNING!!! Please update the commit message before committing!
-
 ## Modified Files
 
-{format_markdown_table(changes)}
+!!!WARNING!!! Please update the commit message before committing!
 
-Please review the changes and stage the files you wish to include in the commit. Once approved, the staged files will be committed. This file can then be deleted.
+!!!WARNING!!! Only staged files will be commited. Please stage changes you wish to commit.
+
+{format_markdown_table(changes)}
 
 ## Detailed Changes
 {diff_output}

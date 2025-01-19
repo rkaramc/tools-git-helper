@@ -23,7 +23,7 @@ def format_rich_table(changes: List[FileChange]) -> Table:
     for change in changes:
         table.add_row(
             change.file,
-            change.status,
+            change.status2 + '/' + change.status,
             str(change.added_lines),
             str(change.removed_lines),
             f"{change.percent_changed:.1f}%",
