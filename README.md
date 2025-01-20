@@ -1,8 +1,8 @@
-# Git Workflow Tool
+# Git Helper Tool
 
 [![built with Codeium/Windsurf](https://codeium.com/badges/main)](https://codeium.com/windsurf)
 
-Welcome to the Git Workflow Tool!
+Welcome to the Git Helper Tool!
 
 Do you find yourself struggling to come up with a clear commit message for your changes? Do you need a better way to review changes before committing? Have you made so many changes at once that you can't keep track of them all?
 
@@ -25,7 +25,7 @@ One of the most popular commit message conventions is [Conventional Commits](htt
 
 1. Install the tool:
    ```bash
-   uv pip install git+https://github.com/rkaramc/git-workflow-tool.git
+   uv pip install git+https://github.com/rkaramc/tools-git-helper.git
    ```
 
 2. Add the workflow rules `ai-rules.md` (or variant) to your AI copilot. 
@@ -49,7 +49,7 @@ gw-commit message --message "fix: some changes"    # Set a draft commit message 
                                                    #    and update the file pending-changes.md directly
 
 # Review and edit pending-changes.md
-gw-commit review     # Shows the pending changes and draft commit message for review
+gw-commit review     # Shows the pending changes and draft commit message for review, in a rich terminal UI
 
 # Commit changes
 gw-commit commit     # Commits the changes to the repository, with the commit message provided by the user

@@ -24,8 +24,8 @@ test = [
 gw-commit = "git_helper.main:cli"
 
 [project.urls]
-Homepage = "https://github.com/rkaramc/git-workflow-tool"
-Repository = "https://github.com/rkaramc/git-workflow-tool.git"
+Homepage = "https://github.com/rkaramc/tools-git-helper"
+Repository = "https://github.com/rkaramc/tools-git-helper.git"
 
 [build-system]
 requires = ["hatchling"]
