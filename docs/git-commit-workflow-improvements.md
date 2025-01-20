@@ -60,10 +60,11 @@ After reviewing our interactions, here are several potential improvements to the
     - [x] Show detailed file change statistics
     - [x] Basic command-line interface
     - [x] Add option to amend previous commit
+    - [x] Rich terminal UI with navigation
+    - [x] Interactive diff viewer with keyboard navigation
+    - [x] Colorized diff output with proper ANSI handling
     - [ ] Show version information and installation status
     - [ ] Provide interactive commit message editing with preview and undo/redo
-    - [ ] Provide interactive file change preview with colorized diff
-    - [ ] Rich terminal UI with navigation
     - [ ] Add support for shell completion in bash/zsh/pwsh/fish
     - [ ] Improve documentation with more usage examples
     - [ ] Allow user to run `gw-commit prepare` multiple times, without losing changes

@@ -78,8 +78,7 @@ def get_file_changes(repo_path: str, cached_only: bool = False) -> List[FileChan
             continue
 
         if " -> " in file:
-            file = file.split(" -> ")[1]
-            old_file = file.split(" -> ")[0]
+            old_file, file = file.split(" -> ")
             change = FileChange(
                 file, "", "R", 0, 0, 100.0, f"<<{old_file}>>"
             )
