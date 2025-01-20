@@ -150,3 +150,20 @@ def get_line_count(file, path):
         return 0
     with open(file_path, "r", encoding="utf-8") as f:
         return len(f.readlines())
+
+
+def get_file_diff(change: FileChange) -> str:
+    """Get the diff content for a file."""
+    repo = git.Repo(get_repo_root())
+    
+    try:
+        # Get the diff for the file
+        diff = repo.git.diff('HEAD', change.file, color=True)
+        return diff
+    except git.exc.GitCommandError:
+        # For new files, show the entire content
+        if os.path.exists(change.file):
+            with open(change.file, 'r', encoding='utf-8') as f:
+                content = f.read()
+            return f"+++ b/{change.file}\n" + "\n".join(f"+{line}" for line in content.splitlines())
+        return ""

@@ -7,12 +7,12 @@ from rich.table import Table
 from .models import FileChange
 
 
-def format_rich_table(changes: List[FileChange]) -> Table:
+def format_rich_table(changes: List[FileChange], current_file: str = None) -> Table:
     """Format changes into a rich table."""
     if not changes:
         return None
 
-    table = Table(title="Modified Files")
+    table = Table(expand=True)
     table.add_column("File", style="cyan")
     table.add_column("Status", style="magenta")
     table.add_column("Added", justify="right", style="green")
@@ -21,13 +21,17 @@ def format_rich_table(changes: List[FileChange]) -> Table:
     table.add_column("Description")
 
     for change in changes:
+        # Highlight current file with bold and reverse video
+        file_style = "bold reverse" if change.file == current_file else ""
+
         table.add_row(
             change.file,
-            change.status2 + '/' + change.status,
+            change.status2 + "/" + change.status,
             str(change.added_lines),
             str(change.removed_lines),
             f"{change.percent_changed:.1f}%",
             change.description or "",
+            style=file_style,  # Apply style to entire row
         )
 
     return table
@@ -43,7 +47,7 @@ def format_markdown_table(changes: List[FileChange]) -> str:
     rows = [
         [
             change.file,
-            change.status2 + '/' + change.status,
+            change.status2 + "/" + change.status,
             str(change.added_lines),
             str(change.removed_lines),
             f"{change.percent_changed:.1f}%",

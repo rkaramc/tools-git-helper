@@ -5,10 +5,12 @@ import os
 
 import click
 import git
-from rich import print as rprint
+import readchar
 from rich.console import Console
+from rich.live import Live
 from rich.markdown import Markdown
-from rich.panel import Panel
+
+from git_helper.diff_viewer import DiffViewer
 
 from .commit_validator import (
     format_validation_error,
@@ -55,7 +57,7 @@ def _prepare():
 
 @cli.command()
 def review():
-    """Review pending changes in a formatted view."""
+    """Review pending changes and commit message."""
     logger.debug("git workflow tool -> cli -> review")
     _review()
 
@@ -76,15 +78,41 @@ def _review():
         message = get_commit_message_from_pending_file(pending_file)
         is_valid, error_message = validate_commit_message(message)
         if not is_valid:
-            console.print(f"[red]Error:[/red] {error_message}")
-            console.print(format_validation_error(error_message))
-            raise click.Abort()
-        else:
-            console.print(f"[green]Valid commit message:[/green]")
+            error_message += "\n" + format_validation_error(error_message)
         md = Markdown(message)
         console.print(md)
-    table = format_rich_table(changes)
-    console.print(table)
+
+        viewer = DiffViewer(console)
+        layout = viewer.create_layout(message, changes, error_message)
+
+        with Live(layout, refresh_per_second=4, screen=True) as live:
+            while True:
+                # Read a key
+                key = readchar.readkey()
+
+                # Handle navigation keys
+                if key == readchar.key.LEFT:
+                    if viewer.prev_change():
+                        layout = viewer.create_layout(message, changes, error_message)
+                        live.update(layout)
+                elif key == readchar.key.RIGHT:
+                    if viewer.next_change():
+                        layout = viewer.create_layout(message, changes, error_message)
+                        live.update(layout)
+                elif key == readchar.key.UP:
+                    if viewer.prev_file():
+                        layout = viewer.create_layout(message, changes, error_message)
+                        live.update(layout)
+                elif key == readchar.key.DOWN:
+                    if viewer.next_file():
+                        layout = viewer.create_layout(message, changes, error_message)
+                        live.update(layout)
+                elif key in ("q", "Q", readchar.key.CTRL_C):
+                    break
+                elif key == " ":
+                    if viewer.next_change():
+                        layout = viewer.create_layout(message, changes, error_message)
+                        live.update(layout)
 
 
 @cli.command()

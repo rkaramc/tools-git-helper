@@ -2,7 +2,7 @@
 
 import logging
 
-from .cli import cli
+from git_helper.cli import cli
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
