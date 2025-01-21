@@ -1,6 +1,5 @@
 After reviewing our interactions, here are several potential improvements to the git commit workflow:
 
-
 0. Capabilities
     - [x] Commit message generation, review and commit
     - [x] Robust commit message validation as per [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0-beta.2/)
@@ -15,12 +14,13 @@ After reviewing our interactions, here are several potential improvements to the
     - [x] Calculate percentage of file changed
     - [x] Optimize performance by batching git diff operations
     - [x] Highlight staged/unstaged file changes
-    - [ ] Improve handling of renamed files
-    - [ ] Improve handling of moved files
+    - [x] Improve handling of renamed files
+    - [x] Improve handling of moved files
+    - [x] Do not overwrite commit message when re-creating pending-changes.md
     - [ ] Add support for binary file changes
     - [ ] Add detection for file mode changes
-    - [ ] Support incremental file change detection
     - [ ] Support file change detection running in the background
+    - [ ] Support file change detection while `gw-commit review` is running
 2. Table Formatting
     - [x] Enforce consistent column widths from the start
     - [x] Add automatic table formatting when updating pending-changes.md

@@ -1,9 +1,10 @@
 """Data models for git workflow."""
 
-from typing import NamedTuple
+from dataclasses import dataclass
 
 
-class FileChange(NamedTuple):
+@dataclass
+class FileChange:
     file: str
     status2: str
     status: str
@@ -11,3 +12,11 @@ class FileChange(NamedTuple):
     removed_lines: int
     percent_changed: float
     description: str = ""
+
+
+@dataclass
+class DiffHunk:
+    """Represents a single change hunk in a diff."""
+
+    start_line: int
+    content: str

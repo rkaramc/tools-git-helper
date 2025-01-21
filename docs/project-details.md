@@ -6,8 +6,6 @@
 - Validates commit messages against Conventional Commits specification
 
 ### Key Commands
-- `gw-commit prepare`: Generate pending changes file
-- `gw-commit message`: Set commit message (manual or AI-assisted)
 - `gw-commit review`: Review changes in terminal UI
 - `gw-commit commit`: Commit changes to repository
 

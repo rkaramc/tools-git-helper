@@ -5,9 +5,11 @@ import re
 from dataclasses import dataclass
 from typing import List
 
+import readchar
 from rich.box import MINIMAL
 from rich.console import Console
 from rich.layout import Layout
+from rich.live import Live
 from rich.markdown import Markdown
 from rich.panel import Panel
 from rich.syntax import Syntax
@@ -15,14 +17,7 @@ from rich.text import Text
 
 from git_helper.commit_validator import validate_commit_message
 from git_helper.git_utils import FileChange, get_file_diff
-
-
-@dataclass
-class DiffHunk:
-    """Represents a single change hunk in a diff."""
-
-    start_line: int
-    content: str
+from git_helper.models import DiffHunk
 
 
 class DiffViewer:
@@ -97,7 +92,7 @@ class DiffViewer:
         )
 
         # Add diff view to right panel
-        if self.changes:
+        if changes:
             syntax = self._get_current_diff()
             right_layout.update(
                 Panel(
@@ -220,3 +215,36 @@ class DiffViewer:
             self.current_change_index -= 1
             return True
         return False
+
+def layout_diff_viewer(console: Console, message: str, changes: List[FileChange], error_message: str):
+    """Create a layout for the diff viewer."""
+    viewer = DiffViewer(console)
+    layout = viewer.create_layout(message, changes, error_message)
+    with Live(layout, refresh_per_second=4, screen=True) as live:
+        while True:
+            # Read a key
+            key = readchar.readkey()
+
+            # Handle navigation keys
+            if key == readchar.key.LEFT:
+                if viewer.prev_change():
+                    layout = viewer.create_layout(message, changes, error_message)
+                    live.update(layout)
+            elif key == readchar.key.RIGHT:
+                if viewer.next_change():
+                    layout = viewer.create_layout(message, changes, error_message)
+                    live.update(layout)
+            elif key == readchar.key.UP:
+                if viewer.prev_file():
+                    layout = viewer.create_layout(message, changes, error_message)
+                    live.update(layout)
+            elif key == readchar.key.DOWN:
+                if viewer.next_file():
+                    layout = viewer.create_layout(message, changes, error_message)
+                    live.update(layout)
+            elif key in ("q", "Q", readchar.key.CTRL_C):
+                break
+            elif key == " ":
+                if viewer.next_change():
+                    layout = viewer.create_layout(message, changes, error_message)
+                    live.update(layout)

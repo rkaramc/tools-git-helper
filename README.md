@@ -28,24 +28,20 @@ One of the most popular commit message conventions is [Conventional Commits](htt
    uv pip install git+https://github.com/rkaramc/tools-git-helper.git
    ```
 
-2. Add the workflow rules `ai-rules.md` (or variant) to your AI copilot. 
-   - The `git-commit-workflow` section contains the rules for generating commit messages.
+2. Add the folder [.gw-state/] to your `.git/info/exclude` file (or to the global git ignore file) to prevent it from being tracked by git. This folder is temporary and holds the `pending-changes.md` file during the commit workflow.
+   - NOTE: Adding this folder to `.gitignore` may prevent your AI assistant from accessing it. (e.g. Windsurf)
 
-Remember to add [pending-changes.md] to your `.git/info/exclude` file to prevent it from being tracked in the repository, as it is used as a temporary scratchpad during the commit workflow.
-   - NOTE: Adding this file to `.gitignore` may prevent your AI copilot from accessing it. (e.g. Windsurf)
+3. If you will be using an AI assistant to generate the commit messages, the `ai-rules.md` file contains sample rules for the assistant. Adapt the rules to your needs and add them to your AI assistant's global rules.
 
 ## Usage
 
 You can use the tool by running the following commands.
 
 ```bash
-# Generate pending changes file
-gw-commit prepare    # Scans for changes and prepares a list of changes for review
-
 # Set a manual commit message
 gw-commit message --message "fix: some changes"    # Set a draft commit message provided by the user
                                                    # OR edit the file pending-changes.md in an editor
-                                                   # OR request your AI copilot to generate a draft commit message 
+                                                   # OR request your AI assistant to generate a draft commit message 
                                                    #    and update the file pending-changes.md directly
 
 # Review and edit pending-changes.md
@@ -59,10 +55,9 @@ gw-commit commit     # Commits the changes to the repository, with the commit me
 - Core git workflow automation functionality
 - Command-line interface with key commands:
   - `gw-commit` with sub-commands:
-    - `prepare`: Generate pending changes file
-    - `message`: Set commit message manually or use an AI copilot to generate it
+    - `message`: Set draft commit message manually
     - `review`: Review pending changes and commit message
-    - `commit`: Commit changes (optionally with `--amend` to amend previous commit; with '--message' for manual commit message)
+    - `commit`: Commit changes (optionally with `--amend` to amend previous commit; with `--message` for manual commit message)
 
 
 ### Technical Implementation
