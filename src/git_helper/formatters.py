@@ -3,6 +3,7 @@
 from typing import List
 
 from rich.table import Table
+from rich import box
 
 from .models import FileChange
 
@@ -12,7 +13,7 @@ def format_rich_table(changes: List[FileChange], current_file: str = None) -> Ta
     if not changes:
         return None
 
-    table = Table(expand=True)
+    table = Table(box=box.MINIMAL, expand=True)
     table.add_column("File", style="cyan")
     table.add_column("Status", style="magenta")
     table.add_column("Added", justify="right", style="green")

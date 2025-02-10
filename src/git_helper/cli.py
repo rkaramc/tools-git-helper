@@ -4,18 +4,15 @@ import logging
 import os
 
 import click
-import git
 from git.cmd import Git
-import readchar
 from rich.console import Console
-from rich.live import Live
 from rich.markdown import Markdown
 
 from git_helper.commit_validator import (
     format_validation_error,
     validate_commit_message,
 )
-from git_helper.diff_viewer import DiffViewer, layout_diff_viewer
+from git_helper.diff_viewer import app_diff_viewer
 from git_helper.file_utils import (
     get_commit_message_from_pending_file,
     get_pending_file_path,
@@ -47,14 +44,15 @@ def _prepare(message: str = None):
 
 
 @cli.command()
-def review():
+@click.option("--keylog", "-k", is_flag=True, default=False, help="Enable logging of key presses to screen")
+def review(keylog: bool):
     """Review pending changes and commit message."""
     logger.debug("git workflow tool -> cli -> review")
-    output = _review()
+    output = _review(keylog)
     console.print(output)
 
 
-def _review():
+def _review(keylog: bool):
     logger.debug("review pending changes")
     repo_path = get_repo_root()
     changes = get_file_changes(repo_path)
@@ -66,7 +64,7 @@ def _review():
     if not is_valid:
         error_message += "\n\n" + format_validation_error(error_message)
 
-    layout_diff_viewer(console, message, changes, error_message)
+    app_diff_viewer(console, message, changes, error_message, keylog)
     return Markdown(message)
 
 

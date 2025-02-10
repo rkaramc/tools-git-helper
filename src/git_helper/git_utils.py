@@ -139,13 +139,13 @@ def get_line_count(file, path):
         return len(f.readlines())
 
 
-def get_file_diff(change: FileChange) -> str:
+def get_file_diff(change: FileChange, unified: int = 3) -> str:
     """Get the diff content for a file."""
     repo = git.Repo(get_repo_root())
 
     try:
         # Get the diff for the file
-        diff = repo.git.diff("HEAD", change.file, color=True)
+        diff = repo.git.diff(f"--unified={unified}", "--no-color", "HEAD", change.file, color=True)
         return diff
     except git.exc.GitCommandError:
         # For new files, show the entire content

@@ -11,13 +11,18 @@ dependencies = [
     "click>=8.0.0",
     "rich>=13.0.0",
     "gitpython>=3.1.0",
-    "readchar>=4.0.0"
+    "readchar>=4.0.0",
+    "textual>=1.0.0",
+    "keyboard>=0.13.5",
 ]
 
 [dependency-groups]
 test = [
     "pytest>=7.0.0",
     "pytest-cov>=3.0.0"
+]
+dev = [
+    "textual-dev>=1.7.0",
 ]
 
 [project.scripts]
